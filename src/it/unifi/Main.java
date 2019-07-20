@@ -20,8 +20,10 @@ public class Main {
         line = Integer.parseInt(br.readLine());
 
         for (int i = 0; i < line; i++) {
-            allConteiners.add(new Conteiner(40, i, allConteiners));
+            allConteiners.add(new Conteiner(40, i));
         }
+
+        Conteiner.conteiners = allConteiners;
 
         allConteiners.get(0).add(new Object());
         allConteiners.get(1).add(new Object());
@@ -55,13 +57,14 @@ public class Main {
 
             p.add(new PToken(conteinersIn, conteinersOut, min, max));
 
+            p.get(p.size() - 1).setName("T" + (p.size() - 1));
             p.get(p.size() - 1).start();
 
         } while (l != null);
 
         is.close();
 
-        Thread.sleep(10000);
+        Thread.sleep(30000);
 
         for (PToken x : p) {
             x.interrupt();
@@ -73,14 +76,13 @@ public class Main {
 
 class Conteiner {
     private ArrayList<Object> p = new ArrayList<>();
-    static ArrayList<Conteiner> conteiners;
+    public static ArrayList<Conteiner> conteiners;
     private int max;
     public int id;
 
-    Conteiner(int max, int id, ArrayList<Conteiner> conteiners) {
+    Conteiner(int max, int id) {
         this.max = max;
         this.id = id;
-        this.conteiners = conteiners;
     }
 
     synchronized void add(Object token) throws InterruptedException {
@@ -141,7 +143,7 @@ class PToken extends Thread {
                     Object r = conteinersIn.get(i).remove(conteinersIn);
                     Thread.sleep((int) ((Math.random() * (max - min)) + min));
                     for (int j = 0; j < conteinersOut.size(); j++) {
-                        System.out.println("From " + conteinersIn.get(i).id + " to " + conteinersOut.get(j).id);
+                        System.out.println("From " + conteinersIn.get(i).id + " to " + conteinersOut.get(j).id + ", " + Thread.currentThread().getName());
                         conteinersOut.get(j).add(r);
                     }
                 }
